@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>auth</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h2>Login</h2>
+  <ion-item>
+    <ion-input [(ngModel)]="email" placeholder="Email"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input [(ngModel)]="password" type="password" placeholder="Password"></ion-input>
+  </ion-item>
+  <ion-button expand="full" (click)="login()">
+    Login
+  </ion-button>
+
+  <p class="register-link">
+    Pas de compte ?
+    <a (click)="goToRegister()">Inscrivez-vous</a>
+  </p>
+
+</ion-content>
