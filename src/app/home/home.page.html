@@ -4,20 +4,20 @@
       Home
     </ion-title>
 
-      <ion-button slot="end" *ngIf="!isLoggedIn()" (click)="goToLogin()">
+    @if (!isLoggedIn()){
+      <ion-button slot="end" (click)="goToLogin()">
         Se connecter
       </ion-button>
-
-      <ion-button slot="end" *ngIf="isLoggedIn()" (click)="logout()">
+    }
+    @else {
+      <ion-button slot="end" (click)="logout()">
         Connecté (logout)
       </ion-button>
+    }
 
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+<ion-button (click)="goToGroups()">
+  Mes groupes
+</ion-button>

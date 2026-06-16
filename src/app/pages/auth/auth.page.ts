@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { FocusService } from 'src/app/core/focus.service';
 
 @Component({
   selector: 'app-auth',
@@ -16,7 +17,10 @@ export class AuthPage implements OnInit {
   email = '';
   password = '';
 
-  constructor(private authService: AuthService, private router : Router) {}
+  constructor(
+    private authService: AuthService,
+    private router : Router,
+    private focusService: FocusService) {}
 
   login(){
     const data = {
@@ -38,6 +42,7 @@ export class AuthPage implements OnInit {
   }
 
   goToRegister() {
+    this.focusService.clearFocus();
     this.router.navigate(['/register']);
   }
 

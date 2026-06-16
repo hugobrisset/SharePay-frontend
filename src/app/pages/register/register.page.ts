@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { FocusService } from 'src/app/core/focus.service';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +18,11 @@ export class RegisterPage implements OnInit {
   email = '';
   password = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private focusService: FocusService)
+    {}
 
   register(){
     const data = {
@@ -29,6 +34,8 @@ export class RegisterPage implements OnInit {
     this.authService.register(data).subscribe({
       next: (res) => {
         console.log("Register OK", res);
+
+        this.focusService.clearFocus();
         this.router.navigate(['/auth']);
       },
       error: (err) => {

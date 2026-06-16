@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Mes groupes
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+
+    @for(group of groups; track group.id) {
+
+      <ion-button (click)="openGroup(group.id)">
+        {{ group.name }}
+      </ion-button>
+
+    }
+
+  </ion-list>
+
+</ion-content>
+
