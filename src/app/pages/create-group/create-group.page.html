@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Créer un nouveau Groupe</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-card>
+
+    <ion-item>
+      <ion-label position="stacked">Nom du groupe</ion-label>
+      <ion-input [(ngModel)]="groupName" placeholder="Ex: Colocation"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="submit()" [disabled]="!groupName">
+      Valider
+    </ion-button>
+
+  </ion-card>
+
+</ion-content>

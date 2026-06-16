@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonButton } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { FocusService } from 'src/app/core/focus.service';
 
@@ -12,7 +12,7 @@ import { GroupService } from '../../services/group.service';
   templateUrl: './groups.page.html',
   styleUrls: ['./groups.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonButton, CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, IonicModule]
 })
 export class GroupsPage implements OnInit {
 
@@ -40,5 +40,10 @@ export class GroupsPage implements OnInit {
   openGroup(groupId: number) {
     this.focusService.clearFocus();
     this.router.navigate(['/groups', groupId]);
+  }
+
+  goToCreateGroup(){
+    this.focusService.clearFocus();
+    this.router.navigate(['/groups/create-group']);
   }
 }
