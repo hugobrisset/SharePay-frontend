@@ -22,4 +22,22 @@
     </ion-fab-button>
   </ion-fab>
 
+  <ion-button expand="full" (click)="generateInvite(groupId)">
+    Générer lien d'invitation
+  </ion-button>
+
+  @if(inviteLink) {
+    <ion-card-header>
+        <ion-card-title>Lien d'invitation</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>{{ inviteLink }}</p>
+
+      <ion-button size="small" (click)="copyLink()">
+        Copier
+      </ion-button>
+    </ion-card-content>
+  }
+
 </ion-content>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonFab, IonFabButton } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -12,12 +12,13 @@ import { FocusService } from 'src/app/core/focus.service';
   templateUrl: './group-details.page.html',
   styleUrls: ['./group-details.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar,IonList, IonItem, IonFab, IonFabButton, CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, IonicModule]
 })
 export class GroupDetailsPage implements OnInit {
 
   groupId!: number;
   expenses: any[] = [];
+  inviteLink = '';
 
   private baseURL = 'http://localhost:3000/groups';
 
@@ -25,7 +26,7 @@ export class GroupDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private focusService: FocusService
+    private focusService: FocusService,
   ) {}
 
   ngOnInit() {
@@ -37,7 +38,7 @@ export class GroupDetailsPage implements OnInit {
   }
 
   loadExpenses() {
-    this.http.get(`${this.baseURL}/group/${this.groupId}/`).subscribe({
+    this.http.get(`${this.baseURL}/${this.groupId}/getAllExpense`).subscribe({
       next: (res: any) => {
         this.expenses = res;
       },
@@ -50,5 +51,22 @@ export class GroupDetailsPage implements OnInit {
   goToAddExpense() {
     this.focusService.clearFocus();
     this.router.navigate(['/groups', this.groupId,'add-expense']);
+  }
+
+  generateInvite(groupId: number) {
+    this.http.post<any>(`http://localhost:3000/groups/${groupId}/invite`,{}).subscribe({
+      next: (res) => {
+        console.log(res);
+
+        this.inviteLink = res.link;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  copyLink() {
+    navigator.clipboard.writeText(this.inviteLink);
   }
 }

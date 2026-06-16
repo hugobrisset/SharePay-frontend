@@ -14,6 +14,6 @@ bootstrapApplication(AppComponent, {
     { provide: HTTP_INTERCEPTORS,  useClass: AuthInterceptor, multi: true },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
   ],
 });

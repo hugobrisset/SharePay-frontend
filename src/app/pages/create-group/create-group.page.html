@@ -1,22 +1,41 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Créer un nouveau Groupe</ion-title>
+    <ion-title>Créer un groupe</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
 
-  <ion-card>
+  <!-- NOM GROUPE -->
+  <ion-item>
+    <ion-input [(ngModel)]="groupName" name="groupName" placeholder="Nom du groupe">
+    </ion-input>
+  </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Nom du groupe</ion-label>
-      <ion-input [(ngModel)]="groupName" placeholder="Ex: Colocation"></ion-input>
-    </ion-item>
+  <!-- PARTICIPANTS -->
+  <ion-list>
+    @for (p of participants; track $index) {
+      <ion-item>
+        <ion-input [(ngModel)]="participants[$index]" name="participant-{{$index}}" placeholder="Nom du participant">
+        </ion-input>
 
-    <ion-button expand="block" (click)="submit()" [disabled]="!groupName">
-      Valider
-    </ion-button>
+        <ion-button fill="clear" slot="end" (click)="removeParticipant($index)">
+          ❌
+        </ion-button>
 
-  </ion-card>
+      </ion-item>
+
+    }
+
+  </ion-list>
+
+    <ion-button expand="full" (click)="addParticipantField()">
+    + Ajouter un participant
+  </ion-button>
+
+  <!-- CREATE -->
+  <ion-button expand="full" color="primary" (click)="createGroup()">
+    Créer le groupe
+  </ion-button>
 
 </ion-content>
