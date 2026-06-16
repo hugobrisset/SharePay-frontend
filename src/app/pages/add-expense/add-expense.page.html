@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Ajouter une dépense</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-card>
+
+    <ion-item>
+      <ion-label position="stacked">Nom de la dépense</ion-label>
+      <ion-input [(ngModel)]="expenseName" placeholder="Ex: Courses"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Montant</ion-label>
+      <ion-input type="number" [(ngModel)]="amount" placeholder="Ex: 25.50">
+      </ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="submit()" [disabled]="!expenseName || !amount">
+      Valider
+    </ion-button>
+
+  </ion-card>
+
+</ion-content>

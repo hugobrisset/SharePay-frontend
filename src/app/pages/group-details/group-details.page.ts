@@ -25,12 +25,14 @@ export class GroupDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private focusService: FocusService)
-    {}
+    private focusService: FocusService
+  ) {}
 
   ngOnInit() {
     this.groupId = Number(this.route.snapshot.paramMap.get('id'));
+  }
 
+  ionViewWillEnter() {
     this.loadExpenses();
   }
 

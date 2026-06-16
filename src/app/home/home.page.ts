@@ -18,8 +18,8 @@ export class HomePage {
   constructor(
     private authService: AuthService, 
     private router: Router,
-    private focusService: FocusService)
-     {}
+    private focusService: FocusService
+  ){}
 
   ngOnInit() {
   }
