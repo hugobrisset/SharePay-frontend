@@ -43,6 +43,11 @@ export class JoinGoupPage implements OnInit {
 
       this.groupName = data.groupName;
       this.participants = data.participants;
+
+      if (data.alreadyJoined) {
+        this.focusService.clearFocus();
+        this.router.navigate(['/groups', data.groupId]);
+      }
     });
     
   } 
