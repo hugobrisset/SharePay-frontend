@@ -15,7 +15,7 @@
 
     <ion-item>
       <ion-label position="stacked">Montant</ion-label>
-      <ion-input type="number" [(ngModel)]="amount" placeholder="Ex: 25.50">
+      <ion-input type="number" [(ngModel)]="amount" placeholder="Ex: 25.50" (ionInput)="rebalance()" >
       </ion-input>
     </ion-item>
 
@@ -32,9 +32,12 @@
 
     <ion-item>
       <ion-label>Mode de répartition</ion-label>
-      <ion-select [(ngModel)]="splitMode">
+      <ion-select [(ngModel)]="splitMode" (ionChange)="onSplitModeChange()">
         <ion-select-option value="equal">
           Split égal
+        </ion-select-option>
+        <ion-select-option value="exact">
+          Montants exacts
         </ion-select-option>
       </ion-select>
     </ion-item>
@@ -45,19 +48,35 @@
 
     @for (p of participants; track p.id) {
       <ion-item>
-        <ion-checkbox
-          slot="start"
-          [(ngModel)]="p.selected">
+        <ion-checkbox slot="start" [(ngModel)]="p.selected" (ionChange)="onParticipantSelectionChange(p)">
         </ion-checkbox>
         <ion-label>
           {{ p.name }}
         </ion-label>
-        <ion-note slot="end">
-          {{ getParticipantShare(p.id) | number:'1.2-2' }} €
-        </ion-note>
+        @if (splitMode === 'equal') {
+          <ion-note slot="end">
+            {{ getParticipantShare(p.id) | number:'1.2-2' }} €
+          </ion-note>
+        }
 
+        @if (splitMode === 'exact') {
+          <ion-input slot="end" type="number" [(ngModel)]="p.exactAmount" [disabled]="!p.selected" (ionBlur)="onAmountEdit(p)">
+          </ion-input>
+         }
       </ion-item>
     }
+
+    <ion-item>
+      <ion-label>
+        Total réparti
+      </ion-label>
+
+      <ion-note slot="end">
+        {{ getExactTotal() | number:'1.2-2' }}
+        /
+        {{ amount || 0 | number:'1.2-2' }} €
+      </ion-note>
+    </ion-item>
     
 
     <ion-button expand="block" (click)="submit()" [disabled]="!expenseName || !amount">

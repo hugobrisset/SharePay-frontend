@@ -29,7 +29,7 @@ export class AddExpensePage implements OnInit {
   payerId: number | null = null;
   selectedParticipants: number[] = [];
 
-  splitMode: 'equal' = 'equal';
+  splitMode: 'equal' | 'exact' = 'equal';
 
   constructor(
     private route: ActivatedRoute,
@@ -54,7 +54,9 @@ export class AddExpensePage implements OnInit {
         next: (res) => {
           this.participants = res.map(p => ({
             ...p,
-            selected: false
+            selected: false,
+            exactAmount: 0,
+            locked: false
           }));
 
           
@@ -72,6 +74,50 @@ export class AddExpensePage implements OnInit {
       });
   }
 
+  onAmountEdit(participant: Participant) {
+    participant.locked = true;
+    participant.exactAmount = this.round2(participant.exactAmount || 0);
+    this.rebalance();
+  }
+
+  rebalance() {
+    const selected = this.participants.filter(p => p.selected);
+    if (!this.amount || selected.length === 0) return;
+
+    const total = Number(this.amount);
+
+    // sum locked values
+    const lockedSum = selected.filter(p => p.locked).reduce((sum, p) => sum + Number(p.exactAmount || 0), 0);
+
+     // get unlocked participants
+    const unlocked = selected.filter(p => !p.locked);
+    if (unlocked.length === 0) return;
+
+     // distribute remaining
+    const remaining = total - lockedSum;
+    const share = remaining / unlocked.length;
+
+    unlocked.forEach(p => {p.exactAmount = this.round2(share);});
+  }
+
+  onParticipantSelectionChange(participant: Participant) {
+    if (!participant.selected) {
+      participant.exactAmount = 0;
+      participant.locked = false;
+    }
+
+    this.rebalance();
+  }
+ 
+  onSplitModeChange() {
+    const selected = this.participants.filter(p => p.selected);
+    if (!this.amount || selected.length === 0) return;
+
+    // RESET STATE FIRST
+    selected.forEach(p => {p.locked = false; p.exactAmount = 0;});
+    this.rebalance();
+  }
+
   calculateEqualSplit() {
     // filter selected participants
     const selected = this.participants.filter(p => p.selected);
@@ -84,8 +130,13 @@ export class AddExpensePage implements OnInit {
     // build payload
     return selected.map(p => ({
       participantId: p.id,
-      amount: share
+      amount: this.round2(share)
     }));
+  }
+
+  getExactTotal(): number {
+    return this.participants.filter(p => p.selected).reduce(
+        (sum, p) => sum + Number(p.exactAmount || 0), 0);
   }
 
   getParticipantShare(participantId: number): number {
@@ -109,35 +160,63 @@ export class AddExpensePage implements OnInit {
   }
 
   submit() {
-     if (!this.expenseName || !this.amount || !this.payerId) return;
+    if (!this.expenseName || !this.amount || !this.payerId) return;
 
-      const splits = this.splitMode === 'equal' ? this.calculateEqualSplit() : [];
+    if (!this.isSplitValid()) {
+      console.error("Split invalid: total does not match amount");
+      return;
+    }
 
-      const payload = {
-        title: this.expenseName,
-        amount: this.amount,
-        payerId: this.payerId,
-        splits: splits
-      };
+    let splits: { participantId: number; amount: number }[] = [];
+    if(this.splitMode === 'equal'){
+      splits = this.calculateEqualSplit();
+    }
+    else if(this.splitMode === 'exact'){
+      splits = this.participants.filter(p => p.selected).map(p => ({
+          participantId: p.id,
+          amount: Number(p.exactAmount || 0)
+        }));
+    }
+    
+    const payload = {
+      title: this.expenseName,
+      amount: this.amount,
+      payerId: this.payerId,
+      splits: splits
+    };
 
-     this.expenseService.createExpense(this.groupId, payload).subscribe({
-      next: (res) => {
-        console.log('Expense created:', res);
+    console.log(payload);
 
-        // reset form
-        this.expenseName = '';
-        this.amount = null;
+    this.expenseService.createExpense(this.groupId, payload).subscribe({
+    next: (res) => {
+      console.log('Expense created:', res);
 
-        this.goBackToExpense(this.groupId);
-      },
-      error: (err) => {
-        console.error('Error creating expense:', err);
-      }
+      // reset form
+      this.expenseName = '';
+      this.amount = null;
+
+      this.goBackToExpense(this.groupId);
+    },
+    error: (err) => {
+      console.error('Error creating expense:', err);
+    }
     });
   }
 
   goBackToExpense(groupId: number) {
     this.focusService.clearFocus();
     this.router.navigate(['/groups', groupId]);
+  }
+
+  isSplitValid(): boolean {
+    const totalSplit = this.participants.filter(p => p.selected).reduce((sum, p) => sum + Number(p.exactAmount || 0), 0);
+
+    const total = Number(this.amount || 0);
+
+    return Math.abs(totalSplit - total) < 0.01;
+  }
+
+  round2(value: number): number {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
   }
 }

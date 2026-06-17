@@ -7,6 +7,9 @@ export interface Participant {
   name: string;
   user_id: number | null;
   selected?: boolean;
+  exactAmount?: number;
+
+  locked?: boolean;
 }
 
 @Injectable({
