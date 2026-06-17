@@ -30,9 +30,10 @@ export class AuthPage implements OnInit {
 
     this.authService.login(data).subscribe({
       next: (res: any) => {
-        console.log('LOGIN OK:', res);
+   
         this.authService.saveToken(res.token);
-
+        this.authService.saveUser(res.user);
+        
         this.router.navigate(['/home']);
       },
       error: (err: any) => {

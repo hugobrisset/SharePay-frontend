@@ -6,12 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FocusService } from 'src/app/core/focus.service';
-
-  interface Group{
-    id: number;
-    name: string;
-    created_at?: string;
-  }
+import { GroupService } from 'src/app/services/group.service';
 
 @Component({
   selector: 'app-create-group',
@@ -29,7 +24,8 @@ export class CreateGroupPage implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private focusService: FocusService
+    private focusService: FocusService,
+    private groupService: GroupService
   ) { }
 
   ngOnInit() {
@@ -48,7 +44,6 @@ export class CreateGroupPage implements OnInit {
   }
 
 
-
   createGroup(){
 
     const cleanParticipants = this.participants.map(p => p.trim()).filter(p => p.length > 0);
@@ -58,9 +53,7 @@ export class CreateGroupPage implements OnInit {
       participants: cleanParticipants
     };
 
-    console.log("DATA SENT:", data);
-
-    this.http.post<Group>('http://localhost:3000/groups/createGroup', data).subscribe({
+    this.groupService.createGroup(data).subscribe({
       next: (res) => {
         this.focusService.clearFocus();
         this.router.navigate(['/groups', res.id]);

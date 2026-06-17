@@ -25,6 +25,19 @@ export class AuthService {
     return !!localStorage.getItem('token');
   }
 
+  getUser() {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
+
+  getUsername() {
+    return this.getUser()?.username;
+  }
+
+  saveUser(user: any) {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
   //stockage Token
   saveToken(token: string) {
     localStorage.setItem('token', token);

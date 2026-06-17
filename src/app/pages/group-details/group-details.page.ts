@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FocusService } from 'src/app/core/focus.service';
+import { GroupService } from 'src/app/services/group.service';
+import { InviteService } from 'src/app/services/invite.service';
 
 @Component({
   selector: 'app-group-details',
@@ -20,13 +21,12 @@ export class GroupDetailsPage implements OnInit {
   expenses: any[] = [];
   inviteLink = '';
 
-  private baseURL = 'http://localhost:3000/groups';
-
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
     private router: Router,
     private focusService: FocusService,
+    private groupService: GroupService,
+    private inviteService: InviteService
   ) {}
 
   ngOnInit() {
@@ -38,7 +38,7 @@ export class GroupDetailsPage implements OnInit {
   }
 
   loadExpenses() {
-    this.http.get(`${this.baseURL}/${this.groupId}/getAllExpense`).subscribe({
+    this.groupService.getExpenses(this.groupId).subscribe({
       next: (res: any) => {
         this.expenses = res;
       },
@@ -53,16 +53,14 @@ export class GroupDetailsPage implements OnInit {
     this.router.navigate(['/groups', this.groupId,'add-expense']);
   }
 
-  generateInvite(groupId: number) {
-    this.http.post<any>(`http://localhost:3000/groups/${groupId}/invite`,{}).subscribe({
+  generateInvite() {
+    this.inviteService.generateInvite(this.groupId).subscribe({
       next: (res) => {
-        console.log(res);
+        const token = res.token;
 
-        this.inviteLink = res.link;
+        this.inviteLink = `http://localhost:8100/join/${token}`;
       },
-      error: (err) => {
-        console.error(err);
-      }
+      error: (err) => console.error(err)
     });
   }
 

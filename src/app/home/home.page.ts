@@ -13,8 +13,6 @@ import { FocusService } from '../core/focus.service';
 })
 export class HomePage {
 
-  healthData: any;
-
   constructor(
     private authService: AuthService, 
     private router: Router,
@@ -24,12 +22,17 @@ export class HomePage {
   ngOnInit() {
   }
 
+  get username() {
+    return this.authService.getUsername();
+  }
+
   isLoggedIn() {
     return this.authService.isLoggedIn();
   }
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 
   goToLogin() {

@@ -36,5 +36,9 @@ export const routes: Routes = [
     path: 'groups/:id/add-expense',
     loadComponent: () => import('./pages/add-expense/add-expense.page').then( m => m.AddExpensePage)
   },
+  {
+    path: 'join/:token',
+    loadComponent: () => import('./pages/join-goup/join-goup.page').then( m => m.JoinGoupPage)
+  },
 
 ];

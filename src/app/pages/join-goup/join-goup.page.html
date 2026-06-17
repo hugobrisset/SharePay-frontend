@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Rejoindre un groupe</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <h2>{{ groupName }}</h2>
+
+  <p>Choisissez votre participant :</p>
+
+  <ion-radio-group [(ngModel)]="selectedParticipantId">
+
+    @for (participant of participants; track participant.id){
+      <ion-item [disabled]="participant.user_id !== null">
+        <ion-radio  slot="start" [value]="participant.id">
+        </ion-radio>
+
+        <ion-label>
+          {{ participant.name }}
+        </ion-label>
+        @if (participant.user_id) {
+          <small> (déjà pris)</small>
+        }
+      </ion-item>
+    }
+    
+
+  </ion-radio-group>
+
+  <ion-button expand="block" [disabled]="!selectedParticipantId" (click)="joinGroup()">
+    Rejoindre le groupe
+  </ion-button>
+
+</ion-content>
