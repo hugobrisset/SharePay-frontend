@@ -9,7 +9,12 @@ export class ExpenseService {
 
   constructor(private http: HttpClient) {}
 
-  createExpense(groupId: number, data: { title: string; amount: number }) {
+  createExpense(groupId: number, data: {
+    title: string;
+    amount: number;
+    payerId: number;
+    splits: { participantId: number; amount: number }[];
+  }) {
     return this.http.post(
       `${this.baseURL}/${groupId}/create-expenses`,
       data

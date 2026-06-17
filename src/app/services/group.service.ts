@@ -2,6 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface Participant {
+  id: number;
+  name: string;
+  user_id: number | null;
+  selected?: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -12,6 +19,10 @@ export class GroupService {
 
   getUserGroups(){
     return this.http.get(`${this.baseURL}/getUserGroups`);
+  }
+
+  getParticipants(groupId: number): Observable<Participant[]>{
+    return this.http.get<Participant[]>(`${this.baseURL}/${groupId}/participants`)
   }
 
   createGroup(data: any): Observable<{ id: number; name: string }> {

@@ -19,6 +19,47 @@
       </ion-input>
     </ion-item>
 
+    <ion-item>
+      <ion-label>Payer par</ion-label>
+      <ion-select [(ngModel)]="payerId">
+      @for (p of participants; track p.id) {
+        <ion-select-option [value]="p.id">
+          {{ p.name }}
+        </ion-select-option>
+      }
+    </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Mode de répartition</ion-label>
+      <ion-select [(ngModel)]="splitMode">
+        <ion-select-option value="equal">
+          Split égal
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Participants concernés</ion-label>
+    </ion-item>
+
+    @for (p of participants; track p.id) {
+      <ion-item>
+        <ion-checkbox
+          slot="start"
+          [(ngModel)]="p.selected">
+        </ion-checkbox>
+        <ion-label>
+          {{ p.name }}
+        </ion-label>
+        <ion-note slot="end">
+          {{ getParticipantShare(p.id) | number:'1.2-2' }} €
+        </ion-note>
+
+      </ion-item>
+    }
+    
+
     <ion-button expand="block" (click)="submit()" [disabled]="!expenseName || !amount">
       Valider
     </ion-button>
