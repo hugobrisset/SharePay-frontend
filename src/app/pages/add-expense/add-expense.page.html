@@ -39,6 +39,9 @@
         <ion-select-option value="exact">
           Montants exacts
         </ion-select-option>
+        <ion-select-option value="parts">
+          Parts
+        </ion-select-option>
       </ion-select>
     </ion-item>
 
@@ -63,6 +66,17 @@
           <ion-input slot="end" type="number" [(ngModel)]="p.exactAmount" [disabled]="!p.selected" (ionBlur)="onAmountEdit(p)">
           </ion-input>
          }
+
+          @if (splitMode === 'parts') {
+            @if (p.selected) {
+              <ion-button (click)="decreaseParts(p)">-</ion-button>
+              <span>{{ p.parts }}</span>
+            <ion-button (click)="increaseParts(p)">+</ion-button>
+            }
+          <ion-note slot="end">
+            {{ getPartShare(p) | number:'1.2-2' }} €
+          </ion-note>
+        }
       </ion-item>
     }
 

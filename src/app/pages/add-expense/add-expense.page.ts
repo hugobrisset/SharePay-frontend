@@ -29,7 +29,7 @@ export class AddExpensePage implements OnInit {
   payerId: number | null = null;
   selectedParticipants: number[] = [];
 
-  splitMode: 'equal' | 'exact' = 'equal';
+  splitMode: 'equal' | 'exact' | 'parts' = 'equal';
 
   constructor(
     private route: ActivatedRoute,
@@ -56,6 +56,7 @@ export class AddExpensePage implements OnInit {
             ...p,
             selected: false,
             exactAmount: 0,
+            parts: 1,
             locked: false
           }));
 
@@ -103,8 +104,12 @@ export class AddExpensePage implements OnInit {
   onParticipantSelectionChange(participant: Participant) {
     if (!participant.selected) {
       participant.exactAmount = 0;
+      participant.parts = 0;
       participant.locked = false;
-    }
+    } else {
+    // default values when selecting again
+    participant.parts = participant.parts || 1;
+  }
 
     this.rebalance();
   }
@@ -115,7 +120,15 @@ export class AddExpensePage implements OnInit {
 
     // RESET STATE FIRST
     selected.forEach(p => {p.locked = false; p.exactAmount = 0;});
-    this.rebalance();
+
+    if (this.splitMode === 'parts') {
+      selected.forEach(p => { p.parts = 1;});
+      this.updatePartsSplit();
+    }
+    else{
+      this.rebalance();
+    }
+    
   }
 
   calculateEqualSplit() {
@@ -132,6 +145,48 @@ export class AddExpensePage implements OnInit {
       participantId: p.id,
       amount: this.round2(share)
     }));
+  }
+
+    updatePartsSplit() {
+    const selected = this.participants.filter(p => p.selected);
+
+    if (!this.amount || selected.length === 0) return;
+
+    const total = Number(this.amount);
+
+    const totalParts = selected.reduce((sum, p) => sum + (p.parts || 1), 0);
+    if (totalParts === 0) return;
+
+    selected.forEach(p => {
+      const share = (total * (p.parts || 1)) / totalParts;
+      p.exactAmount = this.round2(share);
+    });
+  }
+
+  increaseParts(p: Participant) {
+    if (!p.selected) return;
+
+    p.parts = (p.parts || 1) + 1;
+    this.updatePartsSplit();
+  }
+
+  decreaseParts(p: Participant) {
+    if (!p.selected) return;
+
+    p.parts = Math.max(1, (p.parts || 1) - 1);
+    this.updatePartsSplit();
+  }
+
+  getPartShare(p: Participant): number {
+    if (!p.selected) return 0;
+    
+    const selected = this.participants.filter(x => x.selected);
+    const totalParts = selected.reduce((sum, x) => sum + (x.parts || 1), 0);
+
+    if (!this.amount || totalParts === 0) return 0;
+
+    console.log((this.amount * (p.parts || 1)) / totalParts);
+    return (this.amount * (p.parts || 1)) / totalParts;
   }
 
   getExactTotal(): number {
@@ -175,6 +230,12 @@ export class AddExpensePage implements OnInit {
       splits = this.participants.filter(p => p.selected).map(p => ({
           participantId: p.id,
           amount: Number(p.exactAmount || 0)
+        }));
+    }
+    else if (this.splitMode === 'parts') {
+      splits = this.participants.filter(p => p.selected).map(p => ({
+          participantId: p.id,
+          amount: this.getPartShare(p)
         }));
     }
     

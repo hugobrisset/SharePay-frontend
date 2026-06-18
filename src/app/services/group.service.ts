@@ -8,6 +8,7 @@ export interface Participant {
   user_id: number | null;
   selected?: boolean;
   exactAmount?: number;
+  parts? : number;
 
   locked?: boolean;
 }
