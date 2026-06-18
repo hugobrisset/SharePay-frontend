@@ -98,7 +98,10 @@ export class AddExpensePage implements OnInit {
     const remaining = total - lockedSum;
     const share = remaining / unlocked.length;
 
-    unlocked.forEach(p => {p.exactAmount = this.round2(share);});
+    let values = unlocked.map(() => this.round2(share));
+    values = this.fixFloatingSplit(remaining, values);
+
+    unlocked.forEach((p, i) => {p.exactAmount = values[i]});
   }
 
   onParticipantSelectionChange(participant: Participant) {
@@ -140,27 +143,32 @@ export class AddExpensePage implements OnInit {
     // compute share
     const share = Number(this.amount) / selected.length;
 
+    let values = selected.map(() => this.round2(share));
+    values = this.fixFloatingSplit(this.amount, values);
+    console.log(values);
+
     // build payload
-    return selected.map(p => ({
+    return selected.map((p, i) => ({
       participantId: p.id,
-      amount: this.round2(share)
+      amount: values[i]
     }));
   }
 
-    updatePartsSplit() {
+  updatePartsSplit() {
     const selected = this.participants.filter(p => p.selected);
 
     if (!this.amount || selected.length === 0) return;
 
-    const total = Number(this.amount);
+    const amount = Number(this.amount);
 
     const totalParts = selected.reduce((sum, p) => sum + (p.parts || 1), 0);
     if (totalParts === 0) return;
 
-    selected.forEach(p => {
-      const share = (total * (p.parts || 1)) / totalParts;
-      p.exactAmount = this.round2(share);
-    });
+    const rawValues = selected.map(p => (amount * (p.parts || 1)) / totalParts);
+    const corrected = this.fixFloatingSplit(amount, rawValues);
+
+
+    selected.forEach((p, i) => {p.exactAmount = corrected[i];});
   }
 
   increaseParts(p: Participant) {
@@ -279,5 +287,15 @@ export class AddExpensePage implements OnInit {
 
   round2(value: number): number {
     return Math.round((value + Number.EPSILON) * 100) / 100;
+  }
+
+  fixFloatingSplit(amount: number, values: number[]) {
+    const corrected = [...values];
+    const sum = corrected.reduce((a,b) => a + b, 0);
+    const diff = this.round2(amount - sum);
+
+    corrected[corrected.length - 1] += diff;
+
+    return corrected;
   }
 }
