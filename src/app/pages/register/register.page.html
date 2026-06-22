@@ -1,22 +1,48 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>register</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header  title="Register" [showBack]="true"> </app-header>
 
-<ion-content class="ion-padding">
-  <h2>Register</h2>
-  <ion-item>
-    <ion-input [(ngModel)]="username" placeholder="username"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-input [(ngModel)]="email" placeholder="Email"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-input [(ngModel)]="password" type="password" placeholder="Password"></ion-input>
-  </ion-item>
-  <ion-button expand="full" (click)="register()">
-    Login
-  </ion-button>
+<ion-content class="register-page">
+
+  <div class="register-container">
+
+    <!-- Logo -->
+     <div class="register-header">
+        <img src="assets/icon/logo.png" class="register-logo">
+        <h2>Create account</h2>
+        <p>Join SharePay and start sharing expenses</p>
+     </div>
+
+     <div class="register-form">
+
+        <ion-item class="glass-input">
+          <ion-input [(ngModel)]="username" placeholder="Username" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item class="glass-input">
+          <ion-input [(ngModel)]="email" placeholder="Email" type="email"></ion-input>
+        </ion-item>
+
+        <ion-item class="glass-input">
+          <ion-input [(ngModel)]="password" placeholder="Password" type="password"></ion-input>
+        </ion-item>
+
+        @if(errorMessage){
+          <p class="error">
+            {{errorMessage}}
+          </p>
+        }
+
+        <!-- Button -->
+        <ion-button expand="block" class="auth-button" (click)="register()" [disabled]="isLoading">
+          {{ isLoading ? 'Creating account...' : 'Create account' }}
+        </ion-button>
+
+        <p class="register-link">
+          Already have an account?
+          <span (click)="goToLogin()">Sign in</span>
+        </p>
+
+     </div>
+
+  </div>
 
 </ion-content>

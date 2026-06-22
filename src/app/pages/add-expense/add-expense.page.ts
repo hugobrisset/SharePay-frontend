@@ -145,7 +145,6 @@ export class AddExpensePage implements OnInit {
 
     let values = selected.map(() => this.round2(share));
     values = this.fixFloatingSplit(this.amount, values);
-    console.log(values);
 
     // build payload
     return selected.map((p, i) => ({
@@ -193,7 +192,6 @@ export class AddExpensePage implements OnInit {
 
     if (!this.amount || totalParts === 0) return 0;
 
-    console.log((this.amount * (p.parts || 1)) / totalParts);
     return (this.amount * (p.parts || 1)) / totalParts;
   }
 
@@ -254,12 +252,8 @@ export class AddExpensePage implements OnInit {
       splits: splits
     };
 
-    console.log(payload);
-
     this.expenseService.createExpense(this.groupId, payload).subscribe({
     next: (res) => {
-      console.log('Expense created:', res);
-
       // reset form
       this.expenseName = '';
       this.amount = null;

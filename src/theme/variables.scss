@@ -1,2 +1,27 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+:root {
+
+  /* IONIC THEME (OBLIGATOIRE) */
+  --ion-background-color: #0b1220;
+  --ion-text-color: #f8fafc;
+
+  --ion-color-primary: #452e7b;
+  --ion-color-success: #22c55e;
+  --ion-color-danger: #f43f5e;
+
+  /* TON DESIGN SYSTEM */
+  --sp-bg-0: #0b1220;
+  --sp-bg-1: #0f172a;
+
+  --sp-text: #f8fafc;
+  --sp-text-muted: rgba(248, 250, 252, 0.6);
+
+  --sp-primary: #8b5cf6;
+  --sp-primary-soft: rgba(139, 92, 246, 0.25);
+
+  --sp-success: #22c55e;
+  --sp-danger: #f43f5e;
+
+  --sp-glass: rgba(255, 255, 255, 0.06);
+  --sp-border: rgba(255, 255, 255, 0.1);
+  --sp-blur: 14px;
+}

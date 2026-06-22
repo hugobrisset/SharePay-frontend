@@ -1,24 +1,49 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>auth</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header  title="Login" [showBack]="true"> </app-header>
 
-<ion-content class="ion-padding">
-  <h2>Login</h2>
-  <ion-item>
-    <ion-input [(ngModel)]="email" placeholder="Email"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-input [(ngModel)]="password" type="password" placeholder="Password"></ion-input>
-  </ion-item>
-  <ion-button expand="full" (click)="login()">
-    Login
-  </ion-button>
+<ion-content class="auth-page">
 
-  <p class="register-link">
-    Pas de compte ?
-    <a (click)="goToRegister()">Inscrivez-vous</a>
-  </p>
+  <div class="auth-container">
+
+    <!-- Logo -->
+    <div class="auth-header">
+      <img src="assets/icon/logo.png" class="auth-logo">
+      <h2>Welcome back</h2>
+      <p>Sign in to continue</p>
+    </div>
+
+  <!-- FORM -->
+  <div class="auth-form">
+
+    <ion-item class="glass-input">
+      <ion-input [(ngModel)]="email" placeholder="Email" type="email"></ion-input>
+    </ion-item>
+
+    <ion-item class="glass-input">
+      <ion-input [(ngModel)]="password" placeholder="Password" type="password"></ion-input>
+    </ion-item>
+
+    <!-- Error -->
+    @if(errorMessage){
+      <p class="error">
+        {{errorMessage}}
+      </p>
+    }
+
+    <!-- Button -->
+    <ion-button expand="block" class="auth-button" (click)="login()">
+      {{ isLoading ? 'Signing in...' : 'Sign in' }}
+    </ion-button>
+
+    <!-- Register -->
+    <p class="register-link">
+      Don't have an account ?
+      <span (click)="goToRegister()">
+        Sign up
+      </span>
+    </p>
+
+    </div>
+  </div>
 
 </ion-content>
+

@@ -1,12 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Home
+      My Groups
     </ion-title>
-
     @if (!isLoggedIn()){
       <ion-button slot="end" (click)="goToLogin()">
-        Se connecter
+        SIGN IN
       </ion-button>
     }
     @else {
@@ -21,10 +20,64 @@
 
       </div>
     }
-
   </ion-toolbar>
 </ion-header>
 
-<ion-button (click)="goToGroups()">
-  Mes groupes
-</ion-button>
+<ion-content>
+
+  <!-- Logo -->
+  <div class="home-header">
+    <img src="assets/icon/logo.png" class="app-logo" />
+  </div>
+
+  <!-- Not logged in-->
+   @if(!isLoggedIn()){
+    <div class="empty-state">
+      <h2>Welcome to SharePay</h2>
+      <p>Sign in to acess your groups</p>
+
+      <ion-button class="sp-fab" (click)="goToLogin()">
+        Sign in
+      </ion-button>
+    </div>
+   }
+
+   <!-- Logged in -->
+  @else {
+    <!-- No groups -->
+     @if(groups.length === 0){
+      <div class="empty-state">
+        <h2>No groups yet</h2>
+        <p>Start by creating or joining a group</p>
+
+        <ion-button class="sp-button" (click)="goToCreateGroup()">
+          Create your first group
+        </ion-button>
+      </div>
+     }
+
+     <!-- Group list -->
+      @else {
+        <div class="groups-container">
+          @for(group of groups; track group.id){
+            <div class="glass-card" (click)="openGroup(group.id)">
+              <div class="group-name">
+                {{ group.name }}
+              </div>
+            </div>
+          }
+
+          <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+            <ion-fab-button class="sp-fab" (click)="goToCreateGroup()">
+              +
+            </ion-fab-button>
+          </ion-fab>
+
+        </div>
+      }
+  }
+  
+
+
+
+</ion-content>

@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonTitle, IonToolbar } from '@ionic/angular/standalone';
-import { AuthService } from '../../services/auth.service';
+import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+
+import { AuthService } from '../../services/auth.service';
 import { FocusService } from 'src/app/core/focus.service';
+
+import {AppHeaderComponent } from 'src/app/components/app-header/app-header.component';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonItem, IonInput, FormsModule]
+  imports: [IonicModule, FormsModule, AppHeaderComponent]
 })
 export class RegisterPage implements OnInit {
 
@@ -18,13 +21,23 @@ export class RegisterPage implements OnInit {
   email = '';
   password = '';
 
+  errorMessage = '';
+  isLoading = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private focusService: FocusService)
     {}
 
+      ngOnInit() {
+  }
+
   register(){
+    this.errorMessage = '';
+    this.isLoading = true;
+
+
     const data = {
       username: this.username,
       email: this.email,
@@ -33,18 +46,32 @@ export class RegisterPage implements OnInit {
 
     this.authService.register(data).subscribe({
       next: (res) => {
-        console.log("Register OK", res);
+        this.isLoading = false;
+
+        //login automatique
+        this.authService.saveToken(res.token);
+        this.authService.saveUser(res.user);
 
         this.focusService.clearFocus();
-        this.router.navigate(['/auth']);
+        this.router.navigate(['/home']);
       },
       error: (err) => {
-        console.error('REGISTER ERROR:', err);
+        this.isLoading = false;
+
+        if (err.status === 0) {
+          this.errorMessage = 'Server unreachable';
+        } else {
+          this.errorMessage = err.error?.error || 'Something went wrong';
+        }
       }
     });
   }
 
-  ngOnInit() {
+  goToLogin() {
+    this.focusService.clearFocus();
+    this.router.navigate(['/auth']);
   }
+
+
 
 }

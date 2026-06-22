@@ -2,18 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+
 import { FocusService } from 'src/app/core/focus.service';
 import { GroupService } from 'src/app/services/group.service';
+
+import {AppHeaderComponent } from 'src/app/components/app-header/app-header.component';
 
 @Component({
   selector: 'app-create-group',
   templateUrl: './create-group.page.html',
   styleUrls: ['./create-group.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, AppHeaderComponent]
 })
 export class CreateGroupPage implements OnInit {
 

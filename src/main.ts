@@ -8,6 +8,9 @@ import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
+import { addIcons } from 'ionicons';
+import { chevronBackOutline } from 'ionicons/icons';
+
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
@@ -16,4 +19,8 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(withInterceptorsFromDi()),
   ],
+});
+
+addIcons({
+  'chevron-back-outline': chevronBackOutline
 });

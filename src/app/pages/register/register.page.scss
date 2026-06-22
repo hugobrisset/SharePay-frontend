@@ -1,0 +1,81 @@
+.register-page {
+  --background: linear-gradient(
+    180deg,
+    #0f172a,
+    #0b1220
+  );
+}
+
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 40px 20px;
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.register-logo {
+  width: 120px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 10px 30px rgba(139, 92, 246, 0.25));
+}
+
+.register-header h2 {
+  color: var(--sp-text);
+  margin: 0;
+}
+
+.register-header p {
+  color: var(--sp-text-muted);
+  margin-top: 5px;
+}
+
+/* INPUTS GLASS */
+.glass-input {
+  --background: var(--sp-glass);
+
+  border: 1px solid var(--sp-border);
+  margin-bottom: 12px;
+
+  backdrop-filter: blur(var(--sp-blur));
+}
+ion-item.glass-input {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* BUTTON */
+.auth-button {
+  --background: var(--sp-primary);
+  --border-radius: 14px;
+
+  margin-top: 10px;
+
+  font-weight: 600;
+}
+
+/* ERROR */
+.error {
+  color: var(--sp-danger);
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* REGISTER */
+.register-link {
+  margin-top: 20px;
+  color: var(--sp-text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.register-link span {
+  color: var(--sp-primary);
+  cursor: pointer;
+}
