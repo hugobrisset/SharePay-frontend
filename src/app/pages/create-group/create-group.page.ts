@@ -7,8 +7,10 @@ import { Router } from '@angular/router';
 
 import { FocusService } from 'src/app/core/focus.service';
 import { GroupService } from 'src/app/services/group.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 import {AppHeaderComponent } from 'src/app/components/app-header/app-header.component';
+
 
 @Component({
   selector: 'app-create-group',
@@ -21,16 +23,20 @@ export class CreateGroupPage implements OnInit {
 
   groupName: string = '';
   participants: string[] = [''];
+  creatorUsername: string = '';
+  errorMessage: string = '';
 
   
   constructor(
-    private http: HttpClient,
     private router: Router,
     private focusService: FocusService,
-    private groupService: GroupService
+    private groupService: GroupService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
+    this.creatorUsername = this.authService.getUsername();
+    this.participants = [this.creatorUsername, ''];
   }
 
   addParticipantField() {
@@ -38,6 +44,10 @@ export class CreateGroupPage implements OnInit {
   }
 
   removeParticipant(index: number) {
+    if (index === 0) {
+      return; // creator cannot be removed
+    }
+
     this.participants.splice(index, 1);
 
     if (this.participants.length === 0) {
@@ -48,22 +58,33 @@ export class CreateGroupPage implements OnInit {
 
   createGroup(){
 
-    const cleanParticipants = this.participants.map(p => p.trim()).filter(p => p.length > 0);
-
     const data = {
       name: this.groupName,
-      participants: cleanParticipants
+      participants: this.participants
     };
+
+    console.log(data);
 
     this.groupService.createGroup(data).subscribe({
       next: (res) => {
+        this.errorMessage = '';
+
         this.focusService.clearFocus();
         this.router.navigate(['/groups', res.id]);
       },
       error: (err) => {
-        console.error(err);
+        this.errorMessage = err?.error?.error || "An unexpected error occurred";
       }
     });
   }
 
+  isFormValid(): boolean {
+    const hasValidGroupName = this.groupName?.trim().length > 0;
+
+    const hasEmptyParticipant = this.participants.some(
+      p => !p || p.trim().length === 0
+    );
+
+    return hasValidGroupName && !hasEmptyParticipant;
+  }
 }

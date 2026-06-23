@@ -1,37 +1,60 @@
-<app-header  title="Register" [showBack]="true"> </app-header>
+<app-header title="Create group" [showBack]="true"></app-header>
 
-<ion-content class="ion-padding">
+<ion-content class="create-bg">
 
-  <!-- NOM GROUPE -->
-  <ion-item>
-    <ion-input [(ngModel)]="groupName" name="groupName" placeholder="Nom du groupe">
-    </ion-input>
-  </ion-item>
+  <div class="create-container">
 
-  <!-- PARTICIPANTS -->
-  <ion-list>
-    @for (p of participants; track $index) {
-      <ion-item>
-        <ion-input [(ngModel)]="participants[$index]" name="participant-{{$index}}" placeholder="Nom du participant">
-        </ion-input>
+    <!-- CARD -->
+    <div class="glass-form">
 
-        <ion-button fill="clear" slot="end" (click)="removeParticipant($index)">
-          ❌
-        </ion-button>
+      <!-- GROUP NAME -->
+      <div class="input-group">
+        <label>Group name</label>
+        <input [(ngModel)]="groupName" placeholder="e.g. Weekend trip"/>
+      </div>
 
-      </ion-item>
+      <!-- PARTICIPANTS -->
+      <div class="participants">
 
-    }
+        <label>Participants</label>
 
-  </ion-list>
+        @for (p of participants; track $index) {
+          <div class="participant-row">
 
-    <ion-button expand="full" (click)="addParticipantField()">
-    + Ajouter un participant
-  </ion-button>
+            <input [(ngModel)]="participants[$index]" placeholder="Name"/>
 
-  <!-- CREATE -->
-  <ion-button expand="full" color="primary" (click)="createGroup()">
-    Créer le groupe
-  </ion-button>
+            @if($index !== 0){
+              <button class="remove-btn" (click)="removeParticipant($index)">
+                ✕
+              </button>
+            }
+            @else {
+              <span class="you-badge">You</span>
+            }
+
+          </div>
+        }
+
+        <button class="add-btn" (click)="addParticipantField()">
+          + Add participant
+        </button>
+
+      </div>
+
+          @if (errorMessage) {
+        <div class="error-box">
+          {{ errorMessage }}
+        </div>
+      }
+    </div>
+
+  </div>
 
 </ion-content>
+
+<!-- CTA FIXED -->
+<div class="bottom-bar">
+  <button class="create-btn" (click)="createGroup()" [disabled]="!isFormValid()">
+    Create group
+  </button>
+</div>

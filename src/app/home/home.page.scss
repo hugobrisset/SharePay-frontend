@@ -7,7 +7,7 @@ ion-content {
 }
 
 ion-fab-button {
-  --background: var(--sp-primary);
+  --background: var(--sp-primary-soft);
 }
 
 .home-header {
@@ -83,7 +83,7 @@ ion-fab-button {
 }
 
 ion-fab-button.sp-fab {
---background: rgba(139, 92, 246, 0.4);
+--background: var(--sp-primary);
 --background-activated: rgba(139, 92, 246, 0.65);
 --background-hover: rgba(139, 92, 246, 0.55);
 

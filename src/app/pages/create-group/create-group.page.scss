@@ -1,0 +1,171 @@
+ion-content {
+  --padding-bottom: 100px;
+}
+
+.create-bg {
+  --background: linear-gradient(180deg, #0f172a, #0b1220);
+}
+
+.create-container {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.glass-form {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 20px;
+
+  background: var(--sp-glass);
+  border: 1px solid var(--sp-border);
+  backdrop-filter: blur(var(--sp-blur));
+
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* INPUTS */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 13px;
+  color: var(--sp-text-muted);
+  margin-bottom: 6px;
+}
+
+input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--sp-border);
+  border-radius: 12px;
+
+  padding: 12px;
+  color: var(--sp-text);
+
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--sp-primary);
+  box-shadow: 0 0 0 2px var(--sp-primary-soft);
+}
+
+/* PARTICIPANTS */
+.participants {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.participants label{
+    margin-bottom: 0px;
+}
+
+.participant-row {
+  display: flex;
+  gap: 10px;
+}
+
+.participant-row input {
+  flex: 1;
+}
+
+.remove-btn {
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: var(--sp-danger);
+
+  border-radius: 10px;
+  padding: 0 12px;
+}
+
+.you-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+ background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+
+  color: var(--sp-primary);
+
+  font-size: 11px;
+  font-weight: 600;
+
+  border-radius: 12px;
+  padding: 4px 8px;
+
+  backdrop-filter: blur(10px);
+}
+
+/* ADD BUTTON */
+.add-btn {
+  margin-top: 10px;
+  background: transparent;
+  border: 1px dashed var(--sp-border);
+  color: var(--sp-text-muted);
+
+  padding: 10px;
+  border-radius: 12px;
+}
+
+/* BOTTOM CTA */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 15px;
+
+  display: flex;
+  justify-content: center;
+
+  backdrop-filter: blur(12px);
+  background: rgba(0,0,0,0.2);
+}
+
+.create-btn {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 14px;
+
+  border: none;
+  border-radius: 14px;
+
+  background: var(--sp-primary);
+  color: white;
+
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.create-btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.error-box {
+  margin-top: 12px;
+  padding: 8px 12px;
+
+  background: rgba(255, 77, 79, 0.08);
+  border: 1px solid rgba(255, 77, 79, 0.25);
+
+  color: var(--sp-danger);
+  font-size: 13px;
+  font-weight: 400;
+
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+
+  opacity: 0.95;
+}
