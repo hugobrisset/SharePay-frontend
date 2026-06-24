@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { FocusService } from 'src/app/core/focus.service';
@@ -62,8 +61,6 @@ export class CreateGroupPage implements OnInit {
       name: this.groupName,
       participants: this.participants
     };
-
-    console.log(data);
 
     this.groupService.createGroup(data).subscribe({
       next: (res) => {

@@ -1,102 +1,156 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Ajouter une dépense</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header title="Add expense" [showBack]="true"></app-header>
 
-<ion-content class="ion-padding">
+<ion-content class="expense-bg">
+  <div class="expense-container">
 
-  <ion-card>
+    <!-- FORM CARD -->
+    <div class="glass-card">
 
-    <ion-item>
-      <ion-label position="stacked">Nom de la dépense</ion-label>
-      <ion-input [(ngModel)]="expenseName" placeholder="Ex: Courses"></ion-input>
-    </ion-item>
+      <!-- TITLE -->
+      <div class="input-group">
+        <label>Expense name</label>
+        <input [(ngModel)]="expenseName" placeholder="e.g. Groceries" />
+      </div>
 
-    <ion-item>
-      <ion-label position="stacked">Montant</ion-label>
-      <ion-input type="number" [(ngModel)]="amount" placeholder="Ex: 25.50" (ionInput)="rebalance()" >
-      </ion-input>
-    </ion-item>
+      <!-- AMOUNT -->
+      <div class="input-group">
+        <label>Amount</label>
+        <input type="number" [(ngModel)]="amount" placeholder="0.00" (input)="rebalance()" />
+      </div>
 
-    <ion-item>
-      <ion-label>Payer par</ion-label>
-      <ion-select [(ngModel)]="payerId">
-      @for (p of participants; track p.id) {
-        <ion-select-option [value]="p.id">
-          {{ p.name }}
-        </ion-select-option>
-      }
-    </ion-select>
-    </ion-item>
+      <!-- PAYER -->
+      <div class="input-group">
+        <label>Paid by</label>
+        <div class="paid-by-selector" (click)="openPayerModal()">
+          <span>
+            {{ getPayerName() || 'Select payer' }}
+          </span>
+          <span class="chevron">›</span>
+        </div>
 
-    <ion-item>
-      <ion-label>Mode de répartition</ion-label>
-      <ion-select [(ngModel)]="splitMode" (ionChange)="onSplitModeChange()">
-        <ion-select-option value="equal">
-          Split égal
-        </ion-select-option>
-        <ion-select-option value="exact">
-          Montants exacts
-        </ion-select-option>
-        <ion-select-option value="parts">
+      </div>
+
+    </div>
+
+    <!-- PARTICIPANTS -->
+    <div class="participants-card">
+
+      <!-- SPLIT MODE -->
+      <div class="split-modes">
+        <button [class.active]="splitMode === 'equal'" (click)="splitMode = 'equal'; onSplitModeChange()">
+          Equal
+        </button>
+
+        <button [class.active]="splitMode === 'exact'" (click)="splitMode = 'exact'; onSplitModeChange()">
+          Exact
+        </button>
+
+        <button [class.active]="splitMode === 'parts'" (click)="splitMode = 'parts'; onSplitModeChange()">
           Parts
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
+        </button>
+      </div>
 
-    <ion-item>
-      <ion-label>Participants concernés</ion-label>
-    </ion-item>
+      <div class="section-title">Participants</div>
+      @for (p of participants; track p.id) {
+        <div class="participant-row" (click)="toggleParticipant(p)">
 
-    @for (p of participants; track p.id) {
-      <ion-item>
-        <ion-checkbox slot="start" [(ngModel)]="p.selected" (ionChange)="onParticipantSelectionChange(p)">
-        </ion-checkbox>
-        <ion-label>
-          {{ p.name }}
-        </ion-label>
-        @if (splitMode === 'equal') {
-          <ion-note slot="end">
-            {{ getParticipantShare(p.id) | number:'1.2-2' }} €
-          </ion-note>
-        }
+          <label class="sp-checkbox">
+            <input type="checkbox" [(ngModel)]="p.selected" (click)="toggleParticipant(p)"/>
+            <span class="checkmark"></span>
+          </label>
 
-        @if (splitMode === 'exact') {
-          <ion-input slot="end" type="number" [(ngModel)]="p.exactAmount" [disabled]="!p.selected" (ionBlur)="onAmountEdit(p)">
-          </ion-input>
-         }
+          <div class="name">
+            {{ p.name }}
+          </div>
 
-          @if (splitMode === 'parts') {
-            @if (p.selected) {
-              <ion-button (click)="decreaseParts(p)">-</ion-button>
-              <span>{{ p.parts }}</span>
-            <ion-button (click)="increaseParts(p)">+</ion-button>
+          <!-- RIGHT SIDE -->
+          <div class="right">
+
+            @if (splitMode === 'equal') {
+              <span class="amount">
+                {{ getParticipantShare(p.id) | number:'1.2-2' }} €
+              </span>
             }
-          <ion-note slot="end">
-            {{ getPartShare(p) | number:'1.2-2' }} €
-          </ion-note>
-        }
-      </ion-item>
-    }
 
-    <ion-item>
-      <ion-label>
-        Total réparti
-      </ion-label>
+            @if (splitMode === 'exact') {
+              <input class="small-input"
+                  type="number"
+                  [(ngModel)]="p.exactAmount"
+                  [disabled]="!p.selected"
+                  (blur)="onAmountEdit(p)"
+                  (click)="$event.stopPropagation()"
+                />
+            }
 
-      <ion-note slot="end">
-        {{ getExactTotal() | number:'1.2-2' }}
-        /
-        {{ amount || 0 | number:'1.2-2' }} €
-      </ion-note>
-    </ion-item>
-    
+            @if (splitMode === 'parts') {
+              @if (p.selected) {
+                <div class="parts">
+                  <button (click)="decreaseParts(p); $event.stopPropagation()">-</button>
+                  <span>{{ p.parts }}</span>
+                  <button (click)="increaseParts(p); $event.stopPropagation()">+</button>
+                </div>
+              }
 
-    <ion-button expand="block" (click)="submit()" [disabled]="!expenseName || !amount">
-      Valider
-    </ion-button>
+              <span class="amount">
+                {{ getPartShare(p) | number:'1.2-2' }} €
+              </span>
+            }
+          </div>
 
-  </ion-card>
+        </div>
+      }
+    </div>
 
+    <!-- TOTAL -->
+    <div class="total-bar">
+      <span>Total</span>
+      <span>
+        {{ getExactTotal() | number:'1.2-2' }} / {{ amount || 0 | number:'1.2-2' }} €
+      </span>
+    </div>
+
+  </div>
 </ion-content>
+
+<!-- CTA -->
+<div class="bottom-bar">
+  <button class="create-btn" (click)="submit()" [disabled]="!canSubmit()">
+    Add expense
+  </button>
+</div>
+
+
+@if (isPayerModalOpen) {
+  <div class="modal-backdrop" (click)="isPayerModalOpen = false"></div>
+    <div class="modal">
+
+      <div class="modal-header">
+        <span>Select payer</span>
+      </div>
+
+      <div class="modal-list">
+        @for (p of participants; track p.id) {
+
+          <div class="payer-item"
+              [class.active]="p.id === payerId"
+              (click)="selectPayer(p)">
+
+            <div class="avatar">
+              {{ p.name.charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="name">
+              {{ p.name }}
+            </div>
+
+            @if (p.id === payerId) {
+              <div class="check">✓</div>
+            }
+
+          </div>
+
+        }
+
+      </div>
+  </div>
+}

@@ -27,7 +27,6 @@ export class GroupsPage implements OnInit {
   ngOnInit() {
     this.groupService.getUserGroups().subscribe({
       next: (res: any) => {
-        console.log("groupes: ", res);
         this.groups = res;
       },
 

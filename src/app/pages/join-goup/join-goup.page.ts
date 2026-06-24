@@ -39,7 +39,6 @@ export class JoinGoupPage implements OnInit {
 
   loadInvite() {
     this.inviteService.getInviteInfo(this.token).subscribe(data => {
-      console.log("PARTICIPANTS:", data.participants);
 
       this.groupName = data.groupName;
       this.participants = data.participants;

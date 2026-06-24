@@ -4,18 +4,20 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ExpenseService } from 'src/app/services/expense.service';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+
 import { FocusService } from 'src/app/core/focus.service';
 import { GroupService, Participant } from 'src/app/services/group.service';
 import { AuthService } from 'src/app/services/auth.service';
 
-import { ActivatedRoute } from '@angular/router';
+import {AppHeaderComponent } from 'src/app/components/app-header/app-header.component';
 
 @Component({
   selector: 'app-add-expense',
   templateUrl: './add-expense.page.html',
   styleUrls: ['./add-expense.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, AppHeaderComponent]
 })
 export class AddExpensePage implements OnInit {
 
@@ -25,8 +27,11 @@ export class AddExpensePage implements OnInit {
   expenseName: string = '';
   amount: number | null = null;
 
-  participants: Participant[] = [];
   payerId: number | null = null;
+  selectedPayer: Participant | null = null;
+  isPayerModalOpen = false;
+
+  participants: Participant[] = [];
   selectedParticipants: number[] = [];
 
   splitMode: 'equal' | 'exact' | 'parts' = 'equal';
@@ -54,7 +59,7 @@ export class AddExpensePage implements OnInit {
         next: (res) => {
           this.participants = res.map(p => ({
             ...p,
-            selected: false,
+            selected: true,
             exactAmount: 0,
             parts: 1,
             locked: false
@@ -102,6 +107,12 @@ export class AddExpensePage implements OnInit {
     values = this.fixFloatingSplit(remaining, values);
 
     unlocked.forEach((p, i) => {p.exactAmount = values[i]});
+  }
+
+  toggleParticipant(p: Participant) {
+    p.selected = !p.selected;
+
+    this.onParticipantSelectionChange(p);
   }
 
   onParticipantSelectionChange(participant: Participant) {
@@ -266,6 +277,20 @@ export class AddExpensePage implements OnInit {
     });
   }
 
+  openPayerModal() {
+    this.isPayerModalOpen = true;
+  }
+
+  selectPayer(p: Participant) {
+    this.payerId = p.id;
+    this.selectedPayer = p;
+    this.isPayerModalOpen = false;
+  }
+
+  getPayerName() {
+    return this.participants.find(p => p.id === this.payerId)?.name;
+  }
+
   goBackToExpense(groupId: number) {
     this.focusService.clearFocus();
     this.router.navigate(['/groups', groupId]);
@@ -279,6 +304,38 @@ export class AddExpensePage implements OnInit {
     return Math.abs(totalSplit - total) < 0.01;
   }
 
+  canSubmit(): boolean {
+
+    // Nom obligatoire
+    if (!this.expenseName?.trim()) {
+      return false;
+    }
+
+    // Montant obligatoire et > 0
+    if (!this.amount || this.amount <= 0) {
+      return false;
+    }
+
+    // Payer obligatoire
+    if (!this.payerId) {
+      return false;
+    }
+
+    // Au moins un participant
+    const selectedParticipants = this.participants.filter(p => p.selected);
+    if (selectedParticipants.length === 0) {
+      return false;
+    }
+
+    // Vérification des montants en mode Exact
+    if(!this.isSplitValid()){
+      return false;
+    }
+
+    return true;
+  }
+
+
   round2(value: number): number {
     return Math.round((value + Number.EPSILON) * 100) / 100;
   }
@@ -288,8 +345,32 @@ export class AddExpensePage implements OnInit {
     const sum = corrected.reduce((a,b) => a + b, 0);
     const diff = this.round2(amount - sum);
 
-    corrected[corrected.length - 1] += diff;
+    corrected[corrected.length - 1] = this.round2(corrected[corrected.length - 1] + diff);
 
     return corrected;
+  }
+
+  onExactInput(p: Participant) {
+    let value = String(p.exactAmount ?? '');
+
+    // 1. garder uniquement chiffres et point
+    value = value.replace(',', '.').replace(/[^0-9.]/g, '');
+
+    // 2. empêcher plusieurs points
+    const parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts[1];
+    }
+
+    // 3. limiter à 2 décimales
+    if (parts.length === 2) {
+      value = parts[0] + '.' + parts[1].slice(0, 2);
+    }
+
+    // 4. assigner
+    p.exactAmount = value === '' ? 0 : Number(value);
+
+    // 5. recalcul split
+    this.rebalance();
   }
 }
