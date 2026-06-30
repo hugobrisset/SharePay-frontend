@@ -1,43 +1,53 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Dépenses</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header title="Group details" [showBack]="true"></app-header>
 
-<ion-content>
+<ion-content class="group-bg">
 
-  <ion-list>
-    @for (expense of expenses; track expense.id) {
+  <div class="view-switch">
 
-      <ion-item button detail="true" (click)="goToEditExpense(expense.id)">
-        {{ expense.title }} - {{ expense.amount }}€
-      </ion-item>
+    <button
+      [class.active]="viewMode === 'expenses'"
+      (click)="setView('expenses')">
+      💸 Expenses
+    </button>
 
-    }
-  </ion-list>
+    <button
+      [class.active]="viewMode === 'balance'"
+      (click)="setView('balance')">
+      ⚖️ Balance
+    </button>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="goToAddExpense()">
-      +
-    </ion-fab-button>
-  </ion-fab>
+  </div>
 
-  <ion-button expand="full" (click)="generateInvite()">
-    Générer lien d'invitation
-  </ion-button>
-
-  @if(inviteLink) {
-    <ion-card-header>
-        <ion-card-title>Lien d'invitation</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      <p>{{ inviteLink }}</p>
-
-      <ion-button size="small" (click)="copyLink()">
-        Copier
-      </ion-button>
-    </ion-card-content>
+  @if (viewMode === 'expenses') {
+    <app-expenses-list
+      [expenses]="expenses"
+      (add)="goToAddExpense()"
+      (edit)="goToEditExpense($event)">
+    </app-expenses-list>
   }
+  
+  @if (viewMode === 'balance') {
+    <app-balance-list [balances]="balances"></app-balance-list>
+  }
+
+  <div class="invite-section">
+    <ion-button expand="block" (click)="generateInvite()">
+      Generate invite link
+    </ion-button>
+  
+    @if(inviteLink) {
+      <div class="invite-card">
+
+        <div class="invite-link">
+          {{ inviteLink }}
+        </div>
+
+        <ion-button size="small" (click)="copyLink()">
+          Copy
+        </ion-button>
+
+      </div>
+    }
+  </div>
 
 </ion-content>

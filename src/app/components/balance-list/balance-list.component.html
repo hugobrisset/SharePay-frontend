@@ -1,0 +1,47 @@
+<div class="balance-container">
+
+  <div class="section-title">
+    Balances
+  </div>
+
+  <div class="balance-list">
+
+    @for (b of balances; track b.participantId) {
+
+      <div class="balance-card">
+
+        <!-- LEFT -->
+        <div class="balance-left">
+
+          <div class="avatar">
+            {{ b.name.charAt(0).toUpperCase() }}
+          </div>
+
+          <div class="info">
+            <div class="name">
+              {{ b.name }}
+            </div>
+
+            <div class="sub">
+              Net balance
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="balance-right">
+
+          <div class="amount" [class.positive]="b.balance >= 0" [class.negative]="b.balance < 0">
+            {{ b.balance | number:'1.2-2' }} €
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+
+</div>

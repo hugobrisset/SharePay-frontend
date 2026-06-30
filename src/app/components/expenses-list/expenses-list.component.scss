@@ -1,0 +1,108 @@
+.expense-container {
+  padding: 16px;
+}
+
+.section-title {
+  font-size: 14px;
+  opacity: 0.6;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* LIST */
+.expense-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* CARD */
+.expense-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px;
+
+  border-radius: 16px;
+
+  background: var(--sp-glass);
+  border: 1px solid var(--sp-border);
+
+  backdrop-filter: blur(var(--sp-blur));
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+
+  transition: 0.2s ease;
+
+  cursor: pointer;
+}
+
+.expense-card:active {
+  transform: scale(0.98);
+  background: var(--sp-primary-soft);
+}
+
+/* LEFT */
+.expense-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--sp-text);
+}
+
+.expense-sub {
+  font-size: 12px;
+  opacity: 0.5;
+  margin-top: 2px;
+}
+
+/* RIGHT */
+.expense-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.expense-amount {
+  font-weight: 600;
+  color: var(--sp-text);
+}
+
+.chevron {
+  opacity: 0.4;
+  font-size: 18px;
+}
+
+/* FAB */
+.fab-container {
+  position: fixed;
+  bottom: 24px;
+  left: 48%;
+}
+
+.fab-button {
+  width: 56px;
+  height: 56px;
+
+  border-radius: 50%;
+
+  border: 1px solid var(--sp-border);
+
+  background: rgba(139, 92, 246, 0.7);
+  color: white;
+
+  font-size: 26px;
+
+  box-shadow:
+    0 12px 30px rgba(139, 92, 246, 0.35),
+    0 6px 15px rgba(0, 0, 0, 0.3);
+
+  backdrop-filter: blur(12px);
+
+  transition: 0.2s ease;
+}
+
+.fab-button:active {
+  transform: scale(0.92);
+  background: rgba(139, 92, 246, 0.9);
+}

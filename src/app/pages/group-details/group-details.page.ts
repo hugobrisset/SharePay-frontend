@@ -4,16 +4,22 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+
 import { FocusService } from 'src/app/core/focus.service';
 import { GroupService } from 'src/app/services/group.service';
 import { InviteService } from 'src/app/services/invite.service';
+import { ExpenseService } from 'src/app/services/expense.service';
+
+import { AppHeaderComponent } from 'src/app/components/app-header/app-header.component';
+import { ExpensesListComponent } from 'src/app/components/expenses-list/expenses-list.component';
+import { BalanceListComponent } from 'src/app/components/balance-list/balance-list.component';
 
 @Component({
   selector: 'app-group-details',
   templateUrl: './group-details.page.html',
   styleUrls: ['./group-details.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, AppHeaderComponent, ExpensesListComponent, BalanceListComponent]
 })
 export class GroupDetailsPage implements OnInit {
 
@@ -21,12 +27,17 @@ export class GroupDetailsPage implements OnInit {
   expenses: any[] = [];
   inviteLink = '';
 
+  balances: any[] = [];
+
+  viewMode: 'expenses' | 'balance' = 'expenses';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private focusService: FocusService,
     private groupService: GroupService,
-    private inviteService: InviteService
+    private inviteService: InviteService,
+    private expenseService: ExpenseService
   ) {}
 
   ngOnInit() {
@@ -35,16 +46,31 @@ export class GroupDetailsPage implements OnInit {
 
   ionViewWillEnter() {
     this.loadExpenses();
+    this.loadBalances();
+  }
+
+  setView(mode: 'expenses' | 'balance') {
+    this.viewMode = mode;
   }
 
   loadExpenses() {
     this.groupService.getExpenses(this.groupId).subscribe({
       next: (res: any) => {
+        console.log("expense: ", res);
         this.expenses = res;
       },
       error: (err) => {
         console.error(err);
       }
+    });
+  }
+
+  loadBalances() {
+    this.expenseService.getBalance(this.groupId).subscribe({
+      next: (res) => {
+        this.balances = res;
+      },
+      error: (err) => console.error(err)
     });
   }
 
