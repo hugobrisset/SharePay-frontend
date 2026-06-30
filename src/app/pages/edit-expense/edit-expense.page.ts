@@ -47,9 +47,7 @@ export class EditExpensePage implements OnInit {
     this.expenseService.getExpense(this.expenseId)
       .subscribe({
         next: (res) => {
-          console.log("res :", res);
           this.expenseData = res;
-
           if (this.expenseDetails) {
             this.expenseDetails.setExpense(res);
           }

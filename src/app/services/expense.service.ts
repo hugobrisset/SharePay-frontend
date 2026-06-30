@@ -16,7 +16,7 @@ export class ExpenseService {
     splitMode: string;
     splits: { participantId: number; amount: number, parts?: number }[];
   }) {
-    console.log("data : ",data);
+
     return this.http.post(
       `${this.baseURL}/${groupId}/create-expenses`,
       data
@@ -38,8 +38,6 @@ export class ExpenseService {
       splits: { participantId: number; amount: number; parts?: number }[];
     }
   ) {
-    console.log("update data:", data);
-
     return this.http.put(
       `${this.baseURL}/expenses/update/${expenseId}`,
       data

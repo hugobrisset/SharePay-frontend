@@ -32,6 +32,8 @@ export class ExpenseDetailsComponent  implements OnInit {
 
   splitMode: 'equal' | 'exact' | 'parts' = 'equal';
 
+  expenseDate: string = '';
+
   private expenseBuffer: any = null;
   private participantsReady = false;
 
@@ -58,7 +60,6 @@ export class ExpenseDetailsComponent  implements OnInit {
 
   applyExpense(expense: any){
 
-    console.log("expense : ", expense);
     // reset participants first
     this.participants.forEach(p => {
       p.selected = false;
@@ -72,6 +73,8 @@ export class ExpenseDetailsComponent  implements OnInit {
     this.payerId = expense.payer?.id ?? null;
 
     this.splitMode = expense.splitMode;
+
+    this.expenseDate = expense.expenseDate?.split('T')[0];
 
     //apply splits
     for (const split of expense.splits) {
@@ -372,6 +375,7 @@ export class ExpenseDetailsComponent  implements OnInit {
       amount: Number(this.amount),
       payerParticipantId: this.payerId,
       splitMode: this.splitMode,
+      expenseDate: this.expenseDate,
       splits: splits
     };
     return payload;
