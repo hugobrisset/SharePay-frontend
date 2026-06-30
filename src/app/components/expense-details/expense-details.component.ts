@@ -8,7 +8,6 @@ import { ActivatedRoute } from '@angular/router';
 import { FocusService } from 'src/app/core/focus.service';
 import { GroupService, Participant } from 'src/app/services/group.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ExpenseService } from 'src/app/services/expense.service';
 
 @Component({
   selector: 'app-expense-details',
@@ -33,9 +32,11 @@ export class ExpenseDetailsComponent  implements OnInit {
 
   splitMode: 'equal' | 'exact' | 'parts' = 'equal';
 
+  private expenseBuffer: any = null;
+  private participantsReady = false;
+
     constructor(
     private route: ActivatedRoute,
-    private expenseService: ExpenseService,
     private router: Router,
     private focusService: FocusService,
     private groupService: GroupService,
@@ -43,38 +44,80 @@ export class ExpenseDetailsComponent  implements OnInit {
   ) {}
 
   ngOnInit() {
-        const user = this.authService.getUser();
+    const user = this.authService.getUser();
     this.currentUserId = user?.id;
 
-    this.groupId = Number(this.route.snapshot.paramMap.get('id'));
-
+    this.groupId = Number(this.route.snapshot.paramMap.get('groupId'));
     this.loadParticipants();
+  }
+
+  setExpense(expense: any) {
+    this.expenseBuffer = expense;
+    this.tryApply();
+  }
+
+  applyExpense(expense: any){
+
+    console.log("expense : ", expense);
+    // reset participants first
+    this.participants.forEach(p => {
+      p.selected = false;
+      p.exactAmount = 0;
+      p.parts = 1;
+      p.locked = false;
+    });
+
+    this.expenseName = expense.title;
+    this.amount = expense.amount;
+    this.payerId = expense.payer?.id ?? null;
+
+    this.splitMode = expense.splitMode;
+
+    //apply splits
+    for (const split of expense.splits) {
+      const participant = this.participants.find(
+        p => p.id === split.participantId
+      );
+
+      if (participant) {
+        participant.selected = true;
+        participant.exactAmount = Number(split.amount);
+        participant.parts = split.parts ?? 1;
+      }
+    }
+  }
+
+  tryApply() {
+    if (!this.participantsReady || !this.expenseBuffer) return;
+
+    this.applyExpense(this.expenseBuffer);
+    this.expenseBuffer = null;
   }
 
   loadParticipants() {
     this.groupService.getParticipants(this.groupId).subscribe({
-        next: (res) => {
-          this.participants = res.map(p => ({
-            ...p,
-            selected: true,
-            exactAmount: 0,
-            parts: 1,
-            locked: false
-          }));
+      next: (res) => {
+        this.participants = res.map(p => ({
+          ...p,
+          selected: true,
+          exactAmount: 0,
+          parts: 1,
+          locked: false
+        }));
+    
+      // default payer = current user participant if exists
+      const me = this.participants.find(
+        p => p.user_id === this.currentUserId
+      );
 
-          
-          // default payer = current user participant if exists
-           const me = this.participants.find(
-              p => p.user_id === this.currentUserId
-            );
+      if (me) {
+        this.payerId = me.id;
+      }
 
-            if (me) {
-              this.payerId = me.id;
-            }
-
-        },
-        error: (err) => console.error(err)
-      });
+      this.participantsReady = true;
+      this.tryApply();
+    },
+    error: (err) => console.error(err)});
   }
 
   onAmountEdit(participant: Participant) {
@@ -106,6 +149,7 @@ export class ExpenseDetailsComponent  implements OnInit {
     unlocked.forEach((p, i) => {p.exactAmount = values[i]});
   }
 
+
   toggleParticipant(p: Participant) {
     p.selected = !p.selected;
 
@@ -125,15 +169,19 @@ export class ExpenseDetailsComponent  implements OnInit {
     this.rebalance();
   }
  
-  onSplitModeChange() {
+  onSplitModeChange(fromUser: boolean = true) {
     const selected = this.participants.filter(p => p.selected);
     if (!this.amount || selected.length === 0) return;
 
-    // RESET STATE FIRST
-    selected.forEach(p => {p.locked = false; p.exactAmount = 0;});
+    if (fromUser) {
+      selected.forEach(p => {
+        p.locked = false;
+        p.exactAmount = 0;
+      });
+    }
 
     if (this.splitMode === 'parts') {
-      selected.forEach(p => { p.parts = 1;});
+      selected.forEach(p => { p.parts = p.parts || 1; });
       this.updatePartsSplit();
     }
     else{
@@ -294,7 +342,7 @@ export class ExpenseDetailsComponent  implements OnInit {
   }
 
   buildPayload() {
-        if (!this.expenseName || !this.amount || !this.payerId) return;
+    if (!this.expenseName || !this.amount || !this.payerId) return;
 
     if (!this.isSplitValid()) {
       console.error("Split invalid: total does not match amount");
@@ -314,17 +362,18 @@ export class ExpenseDetailsComponent  implements OnInit {
     else if (this.splitMode === 'parts') {
       splits = this.participants.filter(p => p.selected).map(p => ({
           participantId: p.id,
-          amount: this.getPartShare(p)
+          amount: this.getPartShare(p),
+          parts: p.parts || 1
         }));
     }
     
     const payload = {
       title: this.expenseName,
-      amount: this.amount,
-      payerId: this.payerId,
+      amount: Number(this.amount),
+      payerParticipantId: this.payerId,
+      splitMode: this.splitMode,
       splits: splits
     };
-
     return payload;
   }
 

@@ -33,12 +33,16 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/group-details/group-details.page').then( m => m.GroupDetailsPage)
   },
   {
-    path: 'groups/:id/add-expense',
+    path: 'groups/:groupId/add-expense',
     loadComponent: () => import('./pages/add-expense/add-expense.page').then( m => m.AddExpensePage)
   },
   {
     path: 'join/:token',
     loadComponent: () => import('./pages/join-goup/join-goup.page').then( m => m.JoinGoupPage)
+  },
+  {
+    path: 'groups/:groupId/expenses/:expenseId/edit',
+    loadComponent: () => import('./pages/edit-expense/edit-expense.page').then( m => m.EditExpensePage)
   },
 
 ];

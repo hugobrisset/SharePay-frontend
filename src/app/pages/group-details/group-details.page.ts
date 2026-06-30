@@ -53,6 +53,11 @@ export class GroupDetailsPage implements OnInit {
     this.router.navigate(['/groups', this.groupId,'add-expense']);
   }
 
+  goToEditExpense(expenseId: number) {
+    this.focusService.clearFocus();
+    this.router.navigate(['/groups', this.groupId, 'expenses', expenseId, 'edit']);
+  }
+
   generateInvite() {
     this.inviteService.generateInvite(this.groupId).subscribe({
       next: (res) => {

@@ -1,0 +1,37 @@
+.expense-bg {
+  --background: linear-gradient(180deg, #0f172a, #0b1220);
+}
+
+/* CTA */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 15px;
+  backdrop-filter: blur(12px);
+  background: rgba(0,0,0,0.25);
+
+  display: flex;
+  justify-content: center;
+}
+
+.create-btn {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 14px;
+  border-radius: 14px;
+
+  background: var(--sp-primary);
+  border: none;
+
+  color: white;
+  font-weight: 600;
+}
+
+.create-btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

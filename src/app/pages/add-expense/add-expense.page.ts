@@ -21,7 +21,7 @@ export class AddExpensePage implements OnInit {
   @ViewChild(ExpenseDetailsComponent)
   expenseDetails!: ExpenseDetailsComponent;
 
-  constructor(private expenseService: ExpenseService,) {}
+  constructor(private expenseService: ExpenseService) {}
 
   ngOnInit() { }
 

@@ -9,7 +9,7 @@
   <ion-list>
     @for (expense of expenses; track expense.id) {
 
-      <ion-item>
+      <ion-item button detail="true" (click)="goToEditExpense(expense.id)">
         {{ expense.title }} - {{ expense.amount }}€
       </ion-item>
 
