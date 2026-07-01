@@ -1,47 +1,76 @@
 <div class="balance-container">
 
+    <!-- SETTLEMENTS -->
+  <div class="section-title" style="margin-top: 20px;">
+    Remboursements optimisés
+  </div>
+
+  @for (s of settlements; track $index) {
+
+    <div class="settlement-card">
+      <div class="settlement-text" [class.positive]="s.to.id === currentParticipantId" [class.negative]="s.from.id === currentParticipantId">
+        @if (s.from.id === currentParticipantId) {
+          Vous devez {{ s.amount | number:'1.2-2' }}€ à {{ s.to.name }}
+        } 
+        @else if( s.to.id == currentParticipantId){
+          {{ s.from.name }} vous doit {{ s.amount | number:'1.2-2'}}€
+        }
+        @else{
+          {{ s.from.name }} doit {{ s.amount | number:'1.2-2' }}€ à {{ s.to.name}}.
+        }
+    
+      </div>
+    </div>
+
+  }
+
+  @if (settlements.length > 0) {
+    <div class="toggle-container">
+      <ion-button
+        class="toggle-btn"
+        fill="clear"
+        size="small"
+        (click)="toggleAll.emit()"
+      >
+        @if (isGlobalView) {
+          Voir mes remboursements
+        } @else {
+          Voir tous les remboursements
+        }
+      </ion-button>
+    </div>
+  } 
+
+  <!-- BALANCES -->
   <div class="section-title">
     Balances
   </div>
 
-  <div class="balance-list">
+  @for (b of balances; track b.participantId) {
 
-    @for (b of balances; track b.participantId) {
+    <div class="balance-card">
 
-      <div class="balance-card">
-
-        <!-- LEFT -->
-        <div class="balance-left">
-
-          <div class="avatar">
-            {{ b.name.charAt(0).toUpperCase() }}
-          </div>
-
-          <div class="info">
-            <div class="name">
-              {{ b.name }}
-            </div>
-
-            <div class="sub">
-              Net balance
-            </div>
-          </div>
-
+      <div class="balance-left">
+        <div class="avatar">
+          {{ b.name.charAt(0).toUpperCase() }}
         </div>
 
-        <!-- RIGHT -->
-        <div class="balance-right">
-
-          <div class="amount" [class.positive]="b.balance >= 0" [class.negative]="b.balance < 0">
-            {{ b.balance | number:'1.2-2' }} €
-          </div>
-
+        <div class="info">
+          <div class="name">{{ b.name }}</div>
+          <div class="sub">Net balance</div>
         </div>
-
       </div>
 
-    }
+      <div class="balance-right">
+        <div class="amount"
+             [class.positive]="b.balance >= 0"
+             [class.negative]="b.balance < 0">
+          {{ b.balance | number:'1.2-2' }} €
+        </div>
+      </div>
 
-  </div>
+    </div>
+
+  }
 
 </div>

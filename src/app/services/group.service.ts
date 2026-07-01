@@ -36,4 +36,8 @@ export class GroupService {
   getExpenses(groupId: number): Observable<any> {
     return this.http.get(`${this.baseURL}/${groupId}/getAllExpense`);
   }
+
+  getParticipantsId(userId: number): Observable<any> {
+    return this.http.get(`${this.baseURL}/${userId}/getParticipantId`);
+  }
 }

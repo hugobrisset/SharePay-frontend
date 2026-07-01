@@ -27,7 +27,11 @@
   }
   
   @if (viewMode === 'balance') {
-    <app-balance-list [balances]="balances"></app-balance-list>
+    <app-balance-list 
+      [balances]="balances" [settlements]="filteredSettlements" 
+      [currentParticipantId]="currentParticipantId" [isGlobalView]="showAllSettlements"
+      (toggleAll)="showAllSettlements = !showAllSettlements">
+    </app-balance-list>
   }
 
 </ion-content>

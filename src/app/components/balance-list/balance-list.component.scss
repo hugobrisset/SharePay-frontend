@@ -1,55 +1,129 @@
 .balance-container {
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .section-title {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  color: var(--sp-text-muted);
+
+  margin: 10px 0 10px 4px;
+}
+
+/* Settlements */
+.settlement-card {
+  padding: 12px 14px;
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--sp-border);
+
+  backdrop-filter: blur(var(--sp-blur));
+
+  margin-top: 0px;
+
+  transition: 0.2s ease;
+}
+
+.settlement-card:active {
+  transform: scale(0.98);
+}
+
+.settlement-text {
   font-size: 14px;
-  opacity: 0.6;
-  margin-bottom: 12px;
+  line-height: 1.4;
+  color: var(--sp-text);
 }
 
-/* LIST */
-.balance-list {
+.settlement-text.positive {
+  color: var(--sp-success);
+}
+
+.settlement-text.negative {
+  color: var(--sp-danger);
+}
+
+.toggle-container {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  justify-content: center;
+
+  margin: 6px 0 12px;
 }
 
-/* CARD */
+.toggle-btn {
+  --background: transparent;
+  --box-shadow: none;
+  --color: var(--sp-text-muted);
+
+  padding: 4px 10px; /* 🔥 réduit fortement */
+  height: auto;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  text-transform: none;
+
+  border-radius: 999px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08); /* très léger */
+  background: rgba(255, 255, 255, 0.03);
+
+  backdrop-filter: blur(var(--sp-blur));
+
+  transition: all 0.2s ease;
+
+  opacity: 0.75;
+}
+
+.toggle-btn:active {
+  transform: scale(.97);
+  background: rgba(139, 92, 246, 0.18);
+}
+
+/* Balance */
 .balance-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  padding: 14px;
+  padding: 14px 16px;
 
   border-radius: 16px;
 
-  background: var(--sp-glass);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.03)
+  );
+
   border: 1px solid var(--sp-border);
 
   backdrop-filter: blur(var(--sp-blur));
 
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 
   transition: 0.2s ease;
 }
 
-/* LEFT */
-.balance-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .avatar {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
 
   border-radius: 50%;
 
-  background: rgba(139, 92, 246, 0.2);
-  border: 1px solid var(--sp-border);
+  background: radial-gradient(
+    circle at top,
+    rgba(139, 92, 246, 0.4),
+    rgba(139, 92, 246, 0.15)
+  );
+
+  border: 1px solid rgba(139, 92, 246, 0.3);
 
   display: flex;
   align-items: center;
@@ -61,22 +135,23 @@
 
 .name {
   color: var(--sp-text);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .sub {
-  font-size: 12px;
+  font-size: 11px;
   opacity: 0.5;
-}
-
-/* RIGHT */
-.balance-right {
-  text-align: right;
+  margin-top: 2px;
 }
 
 .amount {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 15px;
+
+  padding: 6px 10px;
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .amount.positive {
@@ -85,4 +160,22 @@
 
 .amount.negative {
   color: var(--sp-danger);
+}
+
+.settlement-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.settlement-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  width: 3px;
+  height: 100%;
+
+  background: var(--sp-primary);
+  opacity: 0.4;
 }

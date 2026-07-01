@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-export interface ParticipantBalance {
-  participantId: number;
-  name: string;
-  balance: number;
+export interface FinancialSummary {
+  balances: {
+    participantId: number;
+    name: string;
+    balance: number;
+  }[];
+  settlements: {
+    from: string;
+    to: string;
+    amount: number;
+  }[];
 }
 
 @Injectable({
@@ -51,6 +58,6 @@ export class ExpenseService {
   }
 
   getBalance(groupId: number) {
-    return this.http.get<ParticipantBalance[]>(`${this.baseURL}/${groupId}/balance`);
+    return this.http.get<FinancialSummary>(`${this.baseURL}/${groupId}/balance`);
   }
 }
