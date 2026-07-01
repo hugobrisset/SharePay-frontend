@@ -16,7 +16,7 @@ export class AppHeaderComponent {
   constructor(private navCtrl: NavController) {}
 
   goBack() {
-    this.navCtrl.back();
+    this.navCtrl.navigateBack(this.defaultHref);
   }
 
 }

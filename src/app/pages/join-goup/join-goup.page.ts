@@ -7,13 +7,15 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { InviteService } from '../../services/invite.service';
 import { FocusService } from 'src/app/core/focus.service';
 
+import { AppHeaderComponent } from 'src/app/components/app-header/app-header.component';
+
 
 @Component({
   selector: 'app-join-goup',
   templateUrl: './join-goup.page.html',
   styleUrls: ['./join-goup.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, AppHeaderComponent]
 })
 export class JoinGoupPage implements OnInit {
 

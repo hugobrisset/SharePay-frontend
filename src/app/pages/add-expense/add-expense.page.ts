@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { ExpenseService } from 'src/app/services/expense.service';
 
@@ -21,9 +22,16 @@ export class AddExpensePage implements OnInit {
   @ViewChild(ExpenseDetailsComponent)
   expenseDetails!: ExpenseDetailsComponent;
 
-  constructor(private expenseService: ExpenseService) {}
+  groupId!: number;
 
-  ngOnInit() { }
+  constructor(
+    private expenseService: ExpenseService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() { 
+    this.groupId = Number(this.route.snapshot.paramMap.get('groupId'));
+  }
 
   submit() {
     const payload = this.expenseDetails.buildPayload();
