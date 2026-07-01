@@ -1,4 +1,4 @@
-<app-header title="Group details" [showBack]="true"></app-header>
+<app-header title="Group details" [showBack]="true" [actions]="headerActions"></app-header>
 
 <ion-content class="group-bg">
 
@@ -29,25 +29,5 @@
   @if (viewMode === 'balance') {
     <app-balance-list [balances]="balances"></app-balance-list>
   }
-
-  <div class="invite-section">
-    <ion-button expand="block" (click)="generateInvite()">
-      Generate invite link
-    </ion-button>
-  
-    @if(inviteLink) {
-      <div class="invite-card">
-
-        <div class="invite-link">
-          {{ inviteLink }}
-        </div>
-
-        <ion-button size="small" (click)="copyLink()">
-          Copy
-        </ion-button>
-
-      </div>
-    }
-  </div>
 
 </ion-content>

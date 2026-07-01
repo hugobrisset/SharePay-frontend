@@ -14,3 +14,48 @@
     --color: var(--sp-text);
   }
 }
+
+ion-popover {
+  --background: rgba(15, 23, 42, 0.75);
+  --backdrop-opacity: 0.4;
+
+  --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+
+  --border-radius: 16px;
+
+  backdrop-filter: blur(1px);
+}
+
+ion-popover ion-list {
+  background: transparent;
+  padding: 2px;
+}
+
+ion-popover ion-item {
+  --background: transparent;
+  --color: var(--sp-text);
+
+  border-radius: 10px;
+
+  margin: 4px 0;
+
+  font-size: 14px;
+}
+
+ion-popover ion-item:hover {
+  --background: rgba(139, 92, 246, 0.12);
+}
+
+ion-popover ion-item:active {
+  --background: rgba(139, 92, 246, 0.2);
+}
+
+ion-popover ion-icon {
+  color: var(--sp-primary);
+  font-size: 18px;
+}
+
+ion-popover::part(content) {
+  border: 1px solid var(--sp-border);
+  backdrop-filter: blur(16px);
+}

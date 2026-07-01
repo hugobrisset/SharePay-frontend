@@ -13,5 +13,27 @@
       {{ title }}
     </ion-title>
 
+     @if (actions.length > 0) {
+      <ion-buttons slot="end">
+        <ion-button id="header-menu-button">
+          <ion-icon name="ellipsis-vertical"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+
+        <ion-popover trigger="header-menu-button" triggerAction="click">
+          <ng-template>
+              <ion-list>
+                @for (action of actions; track action.label) {
+                  <ion-item button (click)="runAction(action)">
+                    @if (action.icon) {
+                      <ion-icon slot="start" [name]="action.icon"></ion-icon>
+                    }
+                    <ion-label>{{ action.label }}</ion-label>
+                  </ion-item>
+                }
+              </ion-list>
+          </ng-template>
+        </ion-popover>
+    }
   </ion-toolbar>
 </ion-header>

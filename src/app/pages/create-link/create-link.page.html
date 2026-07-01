@@ -1,0 +1,45 @@
+<app-header 
+  title="Share" 
+  [showBack]="true" 
+  [defaultHref]="'/groups/' + groupId">
+</app-header>
+
+<ion-content class="invite-page">
+
+  <div class="invite-center">
+
+    <div class="invite-card">
+
+      <div class="invite-title">
+        Invite your friends
+      </div>
+
+      <div class="invite-subtitle">
+        Generate a link to invite people to this group
+      </div>
+
+      <ion-button expand="block" class="primary-btn" (click)="generateInvite()">
+        Generate invite link
+      </ion-button>
+
+      @if(inviteLink) {
+
+        <div class="link-box">
+          <div class="link-input">
+            <div class="link-text">
+              {{ inviteLink }}
+            </div>
+
+            <button class="copy-btn" (click)="copyLink()">
+               {{ copied ? 'Copied ✓' : 'Copy' }}
+            </button>
+          </div>
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</ion-content>

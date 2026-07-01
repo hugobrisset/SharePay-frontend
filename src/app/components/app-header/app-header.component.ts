@@ -1,5 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { IonicModule, NavController } from '@ionic/angular';
+import { PopoverController } from '@ionic/angular';
+
+export interface HeaderAction {
+  label: string;
+  icon?: string;
+  action: () => void;
+}
 
 @Component({
   selector: 'app-header',
@@ -9,14 +16,23 @@ import { IonicModule, NavController } from '@ionic/angular';
 })
 export class AppHeaderComponent {
 
+  @Input() actions: HeaderAction[] = [];
+
   @Input() title = '';
   @Input() showBack = true;
   @Input() defaultHref = '/home';
   
-  constructor(private navCtrl: NavController) {}
+  constructor(
+    private navCtrl: NavController,
+    private popoverCtrl: PopoverController
+  ) {}
 
   goBack() {
     this.navCtrl.navigateBack(this.defaultHref);
   }
 
+  async runAction(action: HeaderAction) {
+    await this.popoverCtrl.dismiss(); 
+    action.action();
+  }
 }

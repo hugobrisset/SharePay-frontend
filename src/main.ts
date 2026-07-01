@@ -9,7 +9,8 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
 import { addIcons } from 'ionicons';
-import { chevronBackOutline } from 'ionicons/icons';
+import { ellipsisVertical, chevronBackOutline, shareSocialOutline, createOutline } from 'ionicons/icons';
+
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -22,5 +23,8 @@ bootstrapApplication(AppComponent, {
 });
 
 addIcons({
-  'chevron-back-outline': chevronBackOutline
+  'ellipsis-vertical': ellipsisVertical,
+  'chevron-back-outline': chevronBackOutline,
+  'share-social-outline': shareSocialOutline,
+  'create-outline': createOutline
 });

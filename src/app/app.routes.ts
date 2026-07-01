@@ -29,6 +29,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/create-group/create-group.page').then( m => m.CreateGroupPage)
   },
   {
+    path: 'groups/:id/create-link',
+    loadComponent: () => import('./pages/create-link/create-link.page').then( m => m.CreateLinkPage)
+  },
+  {
     path: 'groups/:id',
     loadComponent: () => import('./pages/group-details/group-details.page').then( m => m.GroupDetailsPage)
   },
