@@ -38,6 +38,9 @@ L'objectif est de faciliter le suivi des dépenses lors de voyages, colocations 
 
 ![Dashboard](screenshots/dashboard.png)
 
+## Creation d'un groupe
+
+![Dashboard](screenshots/create-group.png)
 
 ## Détails d'un groupe
 
