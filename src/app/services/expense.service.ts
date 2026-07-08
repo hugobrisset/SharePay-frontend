@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.prod';
 
 export interface FinancialSummary {
   balances: {
@@ -18,7 +19,7 @@ export interface FinancialSummary {
   providedIn: 'root',
 })
 export class ExpenseService {
-  private baseURL = 'http://localhost:3000/groups';
+  private baseURL = `${environment.apiUrl}/groups`;
 
   constructor(private http: HttpClient) {}
 

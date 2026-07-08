@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.prod';
 
 export interface Participant {
   id: number;
@@ -17,7 +18,7 @@ export interface Participant {
   providedIn: 'root',
 })
 export class GroupService {
-  private baseURL = 'http://localhost:3000/groups';
+  private baseURL = `${environment.apiUrl}/groups`;
 
   constructor(private http: HttpClient) {}
 

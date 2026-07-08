@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InviteService {
-  private apiUrl = 'http://localhost:3000/groups';
+  private apiUrl = `${environment.apiUrl}/groups`;
 
   constructor(private http: HttpClient) {}
 

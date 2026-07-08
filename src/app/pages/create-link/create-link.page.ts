@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from 'src/environments/environment.prod';
 
 import { InviteService } from 'src/app/services/invite.service';
 
@@ -35,7 +36,7 @@ export class CreateLinkPage {
       next: (res) => {
         const token = res.token;
 
-        this.inviteLink = `http://localhost:8100/join/${token}`;
+        this.inviteLink = `${environment.apiUrl}/join/${token}`;
       },
       error: (err) => console.error(err)
     });
